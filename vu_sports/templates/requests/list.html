@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <h2>Request List</h2>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Sport</th>
+                <th>Role</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for req in requests %}
+            <tr>
+                <td>{{ req.user.name.title() }}</td>
+                <td>{{ req.sport.name }}</td>
+                <td>{{ req.role.name }}</td>
+                <td>{{ req.status }}</td>
+                <td>
+                    {% if current_user.role.name == 'Admin'%}
+                    <a>
+                        <button class="btn btn-primary" onclick="window.location.href='{{ url_for('user_request.approve_request', request_id=req.id) }}'">Approve</button>
+                        <button class="btn btn-primary" onclick="window.location.href='{{ url_for('user_request.block_request', request_id=req.id) }}'">Blocked</button>
+                    </a>
+                    {% elif current_user.role.name == 'Coach' %}
+                    <a>
+                        <button class="btn btn-primary" onclick="window.location.href='{{ url_for('user_request.approve_prt_request', request_id=req.id) }}'">Approve</button>
+                        <button class="btn btn-primary" onclick="window.location.href='{{ url_for('user_request.block_prt_request', request_id=req.id) }}'">Blocked</button>
+                    {% endif %}
+                </td>
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% block content %}
+<header class="bg-black text-white py-3">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-between">
+
+            <!-- Logo -->
+            <div class="col-md-3 mb-2 mb-md-0">
+                <a href="/" class="text-white text-decoration-none fs-4">
+                    VU Sports Society
+                </a>
+            </div>
+
+            <!-- Navigation -->
+            <ul class="nav col-12 col-md-auto justify-content-center mb-2 mb-md-0">
+                {% if current_user.is_authenticated %}
+                <li><a href="{{url_for('root.dashboard')}}" class="nav-link px-2 text-white">Home</a></li>
+                {%else%}
+                <li><a href="{{url_for('root.public_view')}}" class="nav-link px-2 text-white">Home</a></li>
+                {% endif %}
+                <li><a href="#" class="nav-link px-2 text-white">Profile</a></li>
+                <li><a href="#" class="nav-link px-2 text-white">Notification</a></li>
+                <!-- <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li> -->
+                <!-- <li><a href="#" class="nav-link px-2 text-white">About</a></li> -->
+            </ul>
+            {%if not current_user.is_authenticated%}
+            <!-- Buttons -->
+            <div class="col-md-3 text-end">
+                <a href="{{url_for('auth.login')}}"><button type="button" class="btn btn-outline-light me-2">Login</button></a>
+                <a href="{{url_for('auth.register')}}"><button type="button" class="btn btn-light">Register</button></a>
+            </div>
+            {% else %}
+            <div class="col-md-3 text-end">
+                <a href="{{url_for('auth.logout')}}"><button type="button" class="btn btn-outline-light me-2">Logout</button></a>
+            {% endif %}
+
+        </div>
+    </div>
+</header>
+{% endblock %}
