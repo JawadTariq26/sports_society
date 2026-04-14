@@ -4,10 +4,23 @@
 <br>
 
 {% if current_user.is_authenticated and current_user.role.name == "Admin" %}
+
 <div class="container">
     <h1>Welcome to the VU Sports Society Admin Dashboard</h1>
     <p>This is your dashboard where you can manage profiles, view and register events.</p>
 </div>
+
+<!-- Create Event  -->
+<div class="container">
+<a href="{{url_for('event.create_event')}}"><button type="button" class="btn btn-info">Create Event</button></a>
+</div>
+<br>
+
+<!-- Show all event -->
+<div class="container">
+<a href="{{url_for('event.show_all_events')}}"><button type="button" class="btn btn-info">Show All Events</button></a>
+</div>
+<br>
 
 <!-- Show all sport -->
 <div class="container">
@@ -19,6 +32,11 @@
 <div class="container">
     <a href="{{url_for('sport.create_sport')}}"><button type="button" class="btn btn-info">Add Sport</button></a>
 </div>
+<br>
+<!-- View Teams -->
+<div class="container">
+    <a href="{{url_for('team.view_all_teams')}}"><button type="button" class="btn btn-info">View All Teams</button></a>
+</div>
 
 {% elif current_user.is_authenticated and current_user.role.name == "Coach" %}
 <div class="container">
@@ -26,14 +44,36 @@
     <p>This is your dashboard where you can view and manage your assigned events.</p>
     <a href="{{url_for('user_request.prt_all_requests')}}"><button type="button" class="btn btn-info">Show All Requests</button></a>
 </div>
+<br>
 
+<div class="container">
+<a href="{{url_for('event.show_all_events')}}"><button type="button" class="btn btn-info"> View Events</button></a>
+</div>
+<br>
+
+<div class="container">
+<a href="{{url_for('event.my_events')}}"><button type="button" class="btn btn-info"> View Registered Events</button></a>
+</div>
 
 {% elif current_user.is_authenticated and current_user.role.name == "Participant" %}
 <div class="container">
     <h1>Welcome {{current_user.name.title()}} to the VU Sports Society Participant Dashboard</h1>
     <p>This is your dashboard where you can view and join sports.</p>
-    
 </div>
+
+
+<div class="container">
+<a href="{{url_for('event.show_all_events')}}"><button type="button" class="btn btn-info"> View Events</button></a>
+</div>
+<br>
+
+
+<div class="container">
+<a href="{{url_for('event.my_events')}}"><button type="button" class="btn btn-info"> View Registered Events</button></a>
+</div>
+
+
+
 {% endif %}
 
 {% endblock %}

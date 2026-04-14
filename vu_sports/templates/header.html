@@ -20,7 +20,8 @@
                 {%else%}
                 <li><a href="{{url_for('root.public_view')}}" class="nav-link px-2 text-white">Home</a></li>
                 {% endif %}
-                <li><a href="#" class="nav-link px-2 text-white">Profile</a></li>
+                
+                <li><a href="{{url_for('profile.view_profile')}}" class="nav-link px-2 text-white">Profile</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">Notification</a></li>
                 <!-- <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li> -->
                 <!-- <li><a href="#" class="nav-link px-2 text-white">About</a></li> -->

@@ -1,0 +1,15 @@
+{%extends "base.html"%}
+{% from 'bootstrap5/form.html' import render_form %}
+
+{%block content %}
+
+<div class = "container">
+{% if user.role.name == 'Coach' %}
+    <h2>{{user.name.title()}} Profile</h2>
+    {{render_form (coach_form )}}
+{% elif user.role.name == 'Participant' %}
+    <h2>{{user.name.title()}} Profile</h2>
+    {{render_form(participant_form)}}
+{% endif %}
+</div>
+{% endblock %}

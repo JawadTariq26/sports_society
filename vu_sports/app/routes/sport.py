@@ -22,7 +22,7 @@ def create_sport():
 
     if request.method == "POST":
         if form.validate_on_submit():
-            SportRepository.create_sport(name=form.name.data)
+            SportRepository.create_sport(name=form.name.data)           #type: ignore
             flash("Sport created successfully!", category="success")
             return redirect(url_for("sport.list_sports"))
 

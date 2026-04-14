@@ -1,4 +1,6 @@
 from vu_sports.app.models.Team import Team
+from vu_sports.app.models.User import User
+from vu_sports.app.models.Event import Event, Event_Registration
 from vu_sports.utils import db
 
 
@@ -19,9 +21,18 @@ class TeamRepository:
         return db.session.query(Team).filter_by(name=name).first()
 
     @staticmethod
-    def create_team(name: str):
+    def create_team(name: str, capacity: int):
 
-        new_team = Team(name=name)
+        new_team = Team(name=name,capacity=capacity)
         db.session.add(new_team)
         db.session.commit()
         return new_team
+
+    @staticmethod
+    def get_registered_members(event_id: int):
+        event = Event.query.get(event_id)
+
+        members = User.query.join(Event_Registration).filter(Event_Registration.event_id == event_id,
+                                                                User.sports.any(id=event.sport_id)).all()
+        return members
+    

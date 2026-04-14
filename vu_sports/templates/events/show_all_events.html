@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- We can Adjust col-md-6 to make the box wider or narrower -->
+        <div class="col-md-6 col-lg-5">
+            
+            <h2 class="text-center mb-4">Event Details</h2>
+
+            {% for event in events %}
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">{{ event.title }}</h5>
+                </div>
+                
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <strong>DateTime:</strong> {{ event.timedate }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Venue:</strong> {{ event.venue }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Sport:</strong> {{ event.sport.name }}
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Capacity:</strong> {{ event.capacity }} members (1 including coach)
+                    </li>
+                    <li class="list-group-item">
+                        <strong>Current Capacity:</strong> {{ event.capacity - event.registrations | length}} spots left
+                    </li>
+                    {% if event.created_by == 1 %}
+                    <li class="list-group-item">
+                        <strong>Created BY:</strong> ADMIN
+                    </li>
+                    {% elif event.created_by == 2 %}
+                    <li class="list-group-item">
+                        <strong>Created BY:</strong> COACH
+                    {% endif %}
+                    <li class="list-group-item">
+                        <strong>Description:</strong> {{ event.description }}
+                    </li>
+                </ul>
+                {% if current_user.role.name.upper() != "ADMIN" %}
+                <div class="card-footer bg-light text-center">
+                    <a href="{{url_for('event.register_event',event_id = event.id,user_id= current_user.id )}}" class="btn btn-lg btn-sm btn-primary">Register</a>
+                </div>
+                {% endif %}
+            </div>
+                
+            {% endfor %}
+
+            {% if not events %}
+            <div class="alert alert-info text-center">
+                No events found.
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endblock %}

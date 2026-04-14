@@ -17,9 +17,11 @@ def all_requests():
 @bp.route('/approve/<int:request_id>', methods=['GET','POST'])
 @admin_required
 def approve_request(request_id):
-    RequestRepository.update_request_status(request_id, 'approved')
-    
-    flash('Request approved successfully!', 'success')
+    error = RequestRepository.update_request_status(request_id, 'approved')
+    if error:
+        flash(error, 'danger')                                                  #type: ignore
+    else:
+        flash('Request approved successfully!', 'success')
     return redirect(url_for('user_request.all_requests'))
 
 
@@ -32,17 +34,26 @@ def block_request(request_id):
 
 
 # handling participant request serparate with coach access only
+# @bp.route("/participants")
+# @coach_required
+# def prt_all_requests():
+#     # requests = RequestRepository.get_all_requests()
+#     # prt_request = [req for req in requests if req.role.name == 'Participant']
+#     coach = current_user
+#     sport_id = coach.sport[0].id if coach.sports else None
+
+    
+#     prt_request = RequestRepository.get_requests_only_prt(sport_id)
+#     return render_template("requests/list.html", requests=prt_request)
+
 @bp.route("/participants")
 @coach_required
 def prt_all_requests():
-    # requests = RequestRepository.get_all_requests()
-    # prt_request = [req for req in requests if req.role.name == 'Participant']
     coach = current_user
+
     sport_id = coach.sports[0].id if coach.sports else None
 
-    
-    prt_request = RequestRepository.get_requests_only_prt( sport_id)
-    
+    prt_request = RequestRepository.get_requests_only_prt(sport_id)
     return render_template("requests/list.html", requests=prt_request)
 
 

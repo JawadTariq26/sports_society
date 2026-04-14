@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <!-- The 'col' sets the width of your "box" -->
+        <div class="col-md-6 col-lg-5">
+            
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    {% if profile.user.role.name == 'Coach' %}
+                        <h4 class="mb-0">Coach Profile</h4>
+                    {% elif profile.user.role.name == 'Participant' %}
+                        <h4 class="mb-0">Participant Profile</h4>
+                    {% endif %}
+                </div>
+
+                <div class="card-body">
+                    <h5 class="text-center text-capitalize mb-3">{{ profile.user.name }}</h5>
+                    
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Email:</strong> {{ profile.user.email }}</li>
+                        <li class="list-group-item"><strong>Bio:</strong> {{ profile.bio }}</li>
+                        
+                        {% if profile.user.role.name == 'Coach' %}
+                            <li class="list-group-item"><strong>Achievements:</strong> {{ profile.achievements }}</li>
+                            <li class="list-group-item"><strong>Experience:</strong> {{ profile.experience_years }} Years</li>
+                            <li class="list-group-item"><strong>Specialization:</strong> {{ profile.specialization }}</li>
+                        {% elif profile.user.role.name == 'Participant' %}
+                            <li class="list-group-item"><strong>Achievement:</strong> {{ profile.achievements }}</li>
+                            <li class="list-group-item"><strong>Age:</strong> {{ profile.age }}</li>
+                            <li class="list-group-item"><strong>Skills:</strong> {{ profile.skills }}</li>
+                        {% endif %}
+                    </ul>
+                </div>
+                {% if current_user.id == profile.user.id or current_user.role.name.upper() == 'ADMIN' %}
+                <div class="card-footer text-center">
+                    <a href="{{ url_for('profile.edit_profile', user_id=profile.user_id) }}" class="btn btn-primary w-100">
+                        Edit Profile
+                    </a>
+                </div>
+            
+                {% endif %}
+                
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

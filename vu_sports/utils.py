@@ -4,13 +4,24 @@ from flask_login import LoginManager
 from flask_bootstrap import Bootstrap5
 from flask_sqlalchemy.session import Session
 from sqlalchemy.orm import scoped_session
+from sqlalchemy import MetaData
 
 from functools import wraps
 from flask import abort
 from flask_login import current_user
 
 
-db = SQLAlchemy()
+convention = {
+    "ix": 'ix_%(column_0_label)s',
+    "uq": "uq_%(table_name)s_%(column_0_name)s",
+    "ck": "ck_%(table_name)s_%(constraint_name)s",
+    "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
+    "pk": "pk_%(table_name)s"
+}
+
+metadata = MetaData(naming_convention=convention)
+
+db = SQLAlchemy(metadata=metadata)
 migrate = Migrate()
 login_manager = LoginManager()
 bootstrap = Bootstrap5()
@@ -32,6 +43,25 @@ def coach_required(func):
             abort(403) 
         return func(*args, **kwargs)
     return wrapper
+
+def coach_or_participant_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated or \
+           current_user.role.name not in ["Coach", "Participant"]:
+            abort(403)
+        return func(*args, **kwargs)
+    return wrapper
+
+def coach_or_admin_required(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        if not current_user.is_authenticated or \
+           current_user.role.name not in ["Coach", "Admin"]:
+            abort(403)
+        return func(*args, **kwargs)
+    return wrapper
+
 
 def configure_login_manager():
     login_manager.login_view = "auth.login"

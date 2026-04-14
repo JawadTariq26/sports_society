@@ -21,7 +21,7 @@ class SportRepository:
     @staticmethod
     def create_sport(name: str):
 
-        new_sport = Sport(name=name)
+        new_sport = Sport(name=name) 
         db.session.add(new_sport)
         db.session.commit()
         return new_sport

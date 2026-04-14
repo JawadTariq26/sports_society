@@ -26,3 +26,4 @@ class User(db.Model, UserMixin):
         "Sport", secondary=sport_participation, backref="participants"
     )
     requests = db.relationship("Request", backref="user")
+    registrations = db.relationship("Event_Registration", backref="user", lazy="joined")

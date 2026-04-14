@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-5"> 
+    <h3>My Registered Events</h3>
+
+    {% if registrations %}
+        <div class="row">
+            {% for reg in registrations %}
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ reg.event.title }}</h5>
+                            <p class="card-text">
+                                <strong>Sport:</strong> {{ reg.event.sport.name }}<br>
+                                <strong>Date:</strong> {{ reg.event.timedate }}<br>
+                                <strong>Venue:</strong> {{ reg.event.venue }}<br>
+                                {% if current_user.role.name.upper() != "COACH" %}
+                                    {% set coach = reg.event.registrations | selectattr('user.role.name', 'equalto', 'Coach') | first%}
+                                    {% if coach %}
+                                    <strong>Your Coach:</strong> {{coach.user.name.title()}} <br>
+                                    {% else %}
+                                    <strong>Your Coach:</strong> {{"Coach Is Blocked, This Event Is Pending"}} <br>
+                                    {% endif %}
+                                {% endif %}
+                                <strong>Status:</strong> 
+                                <span class="badge bg-info">{{ reg.status }}</span><br>
+                                <br>
+                                <a href="{{ url_for('team.registered_members', event_id=reg.event.id) }}" class="btn btn-outline-info">
+                                    View Members
+                                </a>
+                                <br><br>
+                                <a href="{{ url_for('team.view_teams',event_id=reg.event.id) }}" class="btn btn-outline-info">
+                                    View Teams
+                                </a><br><br>
+                                {% if current_user.role.name.upper() == 'COACH' %}
+                                <a href="{{ url_for('team.create_team',event_id=reg.event.id) }}" class="btn btn-outline-success">
+                                    Create Team
+                                </a><br><br>
+                                
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            You haven't registered for any events yet. 
+            <a href="{{ url_for('event.show_all_events') }}">Browse events</a> to get started!
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

@@ -23,31 +23,30 @@ def register() -> str:
 
     if request.method == "POST":
         if form.validate_on_submit():
-            if UserRepository.get_by_email(form.email.data):        #type: ignore
+            if UserRepository.get_by_email(form.email.data):                                #type: ignore
                 flash("Email already registered.", category="warning")
                 return render_template("auth/register.html", form=form)
             else:
-                
                 selected_sports = form.sports.data
-                role = RoleRepository.get_role_by_id(form.role.data)        #type: ignore
+                role = RoleRepository.get_role_by_id(form.role.data)                        #type: ignore
 
-                if role.name == "Coach" and len(selected_sports) != 1:
+                if role.name == "Coach" and len(selected_sports) != 1:                      #type: ignore
                     flash("Coaches must select exactly one sport.", category="warning")
                     return render_template("auth/register.html", form=form)
                 
-                if role.name == "Participant" and len(selected_sports)  > 2 or len(selected_sports) == 0:
+                if role.name == "Participant" and len(selected_sports)  > 2 or len(selected_sports) == 0:   #type: ignore
                     flash("Participants can select maximum 2 sports.", category="warning")
                     return render_template("auth/register.html", form=form)
 
                 user = UserRepository.create_user(
-                    name=form.name.data,
-                    email=form.email.data,
-                    password=generate_password_hash(form.password.data),
+                    name=form.name.data,                                                    #type: ignore
+                    email=form.email.data,                                                  #type: ignore
+                    password=generate_password_hash(form.password.data),                    #type: ignore
                     role_id=form.role.data,
                 )
                 db.session.flush()
 
-                for sport_id in selected_sports:                #type: ignore
+                for sport_id in selected_sports:                                           #type: ignore
                     RequestRepository.create_request(
                         user_id=user.id,
                         sport_id=sport_id,
@@ -55,9 +54,10 @@ def register() -> str:
                 )
                 db.session.commit()
                 flash("Registration successful! Please log in.", category="success")
-                return redirect(url_for("auth.login"))                          #type: ignore
+                return redirect(url_for("auth.login"))                                     #type: ignore
 
     return render_template("auth/register.html", form=form)
+
 
 
 @bp.route("/login", methods=["GET", "POST"])
@@ -68,16 +68,16 @@ def login() -> str:
     if request.method == "POST":
         if form.validate_on_submit():
             user = UserRepository.get_by_email(form.email.data)                     #type: ignore
-            current_status = RequestRepository.get_current_user_status(user.id) if user else None
+            if not user:
+                flash('Please Registered First To Login',category='danger')
+                return redirect(url_for("auth.register"))                           #type: ignore
+            approved = RequestRepository.get_current_user_status(user.id) if user else None
             current_role = user.role.name if user else None
 
-            print(current_status)
-            if user and check_password_hash(user.password_hash, form.password.data) and current_status == 'approved' or current_role == 'Admin':
+            if user and check_password_hash(user.password_hash, form.password.data) and approved is True or current_role == 'Admin':    #type: ignore
                 login_user(user)
-                print(current_user.is_authenticated)
                 flash("Login successful!", category="success")
-
-                return redirect(url_for("root.dashboard"))      #type: ignore
+                return redirect(url_for("root.dashboard"))                           #type: ignore
         
             flash("Invalid email or password or request pending.", category="danger")
 
@@ -89,4 +89,4 @@ def login() -> str:
 def logout() -> str:
     logout_user()
     flash("You have been logged out.", category="info")
-    return redirect(url_for("root.public_view"))     #type: ignore
+    return redirect(url_for("root.public_view"))                                      #type: ignore
