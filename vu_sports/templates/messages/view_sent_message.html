@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+    <h4 class="mb-3 fw-bold">📤 Sent Messages</h4>
+
+    {% for msg in messages %}
+    <div class="card shadow-sm mb-2 border-0" style="border-left: 4px solid #0d6efd;">
+        
+        <div class="card-body py-2 px-3">
+
+            
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-semibold text-primary">
+                    To: {{ msg.receiver.name }}
+                </span>
+                <small class="text-muted">
+                    {{ msg.timestamp.strftime('%d %B %Y, %I:%M %p') }}
+                </small>
+            </div>
+
+            <div class="mt-1 text-dark" style="font-size: 14px;">
+                {{ msg.body }}
+            </div>
+
+        </div>        
+    </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

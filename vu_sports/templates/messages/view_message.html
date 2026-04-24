@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container mt-4">
+
+    <!-- Header Row -->
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h4 class="fw-bold mb-0">📥 Inbox</h4>
+
+        <a href="{{ url_for('message.view_sent_message') }}"
+           class="btn  btn-outline-primary btn-lg px-4">
+            📤 Sent Messages
+        </a>
+    </div><br><br>
+
+    {% for msg in messages %}
+    <div class="card shadow-sm mb-2 border-0" style="border-left: 4px solid #0d6efd;">
+        
+        <div class="card-body py-2 px-3" style="background-color: #f8f9fa";>
+
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="fw-semibold text-primary">
+                    {{ msg.sender.name }}
+                </span>
+                <small class="text-muted">
+                    {{ msg.timestamp.strftime('%d %B %Y, %I:%M %p') }}
+                </small>
+            </div>
+
+            <div class="mt-1 text-dark" style="font-size: 14px;">
+                {{ msg.body }}
+            </div>
+
+        </div>
+
+    </div>
+    {% else %}
+    <p class="text-muted text-center mt-3">No messages found</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

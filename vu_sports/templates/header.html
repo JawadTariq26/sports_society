@@ -22,7 +22,19 @@
                 {% endif %}
                 
                 <li><a href="{{url_for('profile.view_profile')}}" class="nav-link px-2 text-white">Profile</a></li>
+                
+                {% if current_user.is_authenticated %}
+                <li>
+                    <a href="{{url_for('notification.view_notification')}}" class="nav-link px-2 text-white position-relative">
+                        <i class="bi bi-bell"></i> Notification
+                            <span class="spinner-grow spinner-grow-sm text-success position-absolute" role="status"  style="width: 10px; height: 10px; top: 12px; margin-left: 2px;">
+                                <span class="visually-hidden">Loading...</span>
+                            </span>
+                    </a>
+                </li>
+                {% else %}
                 <li><a href="#" class="nav-link px-2 text-white">Notification</a></li>
+                {% endif %}
                 <!-- <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li> -->
                 <!-- <li><a href="#" class="nav-link px-2 text-white">About</a></li> -->
             </ul>

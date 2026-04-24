@@ -1,6 +1,6 @@
 from vu_sports.app.models.Request import Request
 from vu_sports.app.models.User import User
-from vu_sports.app.models.Sport import Sport
+from vu_sports.app.models.Event import Event
 from vu_sports.app.models.Role import Role
 from vu_sports.app.models.Event import Event_Registration
 from vu_sports.utils import db
@@ -79,7 +79,19 @@ class RequestRepository:
             req.status = new_status
             if req.sport in req.user.sports:
                 req.user.sports.remove(req.sport)
-            db.session.query(Event_Registration).filter_by(user_id = req.user_id).delete()
+            
+
+            db.session.query(Event_Registration).filter(
+            Event_Registration.user_id == req.user_id,
+            Event_Registration.event_id.in_(
+            db.session.query(Event.id).filter_by(sport_id=req.sport_id)
+            )).delete(synchronize_session=False)   
+
+            if req.role.name == "Participant":
+                 for team in list(req.user.teams):
+                    if any(event.sport_id == req.sport_id for event in team.events):
+                        req.user.teams.remove(team)
+
 
         db.session.commit()
         return None

@@ -16,7 +16,6 @@
                         <p class="card-text text-muted mb-0">
                             <strong>Capacity:</strong> {{ team.capacity }} Members <br>
                             <strong>Current Capacity:</strong> {{ team.users | length }}<br>
-            
                         </p>
                         <br>
                         {% if current_user.role.name.upper() == 'ADMIN' %}

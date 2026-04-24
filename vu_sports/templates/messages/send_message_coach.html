@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from 'bootstrap5/form.html' import render_form %}  
+{% block content %} 
+
+
+<div class="container mt-4">
+
+    <h3 class="text-center mb-4">Team Members</h3>
+
+    {% for member in members %}
+    <div class="card shadow-sm mb-2 p-3">
+        <div class="d-flex justify-content-between align-items-center">
+
+            <div>
+                <h6 class="mb-1">{{ member.name }}</h6>
+                <small class="text-muted">
+                    {{ member.role.name }} |
+                    {{ member.teams[0].name if member.teams else "No Team" }}
+                </small>
+            </div>
+
+            <a href="{{ url_for('message.send_message_coach', receiver_id=member.id) }}"
+               class="btn btn-sm btn-primary">
+                Send Message
+            </a>
+
+        </div>
+    </div>
+    {% endfor %}
+
+    {% if selected_member %}
+    <div class="card shadow mt-4 p-4">
+        <h5 class="mb-3">
+            Send message to <span class="text-primary">{{ selected_member.name }}</span>
+        </h5>
+
+        {{ render_form(form) }}
+    </div>
+    {% endif %}
+
+</div>
+
+{% endblock %}
+
+
+
+

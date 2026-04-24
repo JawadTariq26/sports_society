@@ -1,0 +1,76 @@
+{% extends "base.html"%}
+{% from 'bootstrap5/form.html' import render_form %}  
+
+{% block content %}
+{% if entries%}
+<ul class="list-group">
+    {% for entry in entries %}
+    <li class="list-group-item">
+        <div class="row align-items-center">
+            
+            <div class="col-md-4">
+                <strong>{{ entry.user.name }}</strong>
+                {% if entry.user.id == current_user.id %}
+                    <span class="badge bg-secondary ms-1">You</span>
+                {% endif %}
+                <br>
+                <small class="text-muted">{{ entry.team.name }}</small>
+            </div>
+
+
+            <div class="col-md-8 d-flex justify-content-end align-items-center gap-4">
+                
+                {% if entry.coach %}
+                <div class="text-center" style="min-width: 110px;">
+                    <span title="Coach: {{ entry.coach.name }}" style="font-size: 1.3rem;">🏃‍♂️</span><br>
+                    {% if current_user.id != entry.coach.id %}
+                    <a href="{{ url_for('message.send_message_page',
+                        event_id=event_id,
+                        message_to=entry.coach.id) }}" 
+                       class="btn btn-sm btn-outline-dark">
+                        Message Coach
+                    </a>
+                    {% endif %}
+                </div>
+                {% endif %}
+
+                <div style="min-width: 90px; text-align: right;">
+                    {% if current_user.id != entry.user.id %}
+                    <a href="{{ url_for('message.send_message_page',
+                        event_id=event_id,
+                        message_to=entry.user.id) }}" 
+                       class="btn btn-sm btn-info text-white">
+                        Message Member
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if receiver_id == entry.user.id or (entry.coach and receiver_id == entry.coach.id) %}
+            <div class="mt-3 p-3 bg-light border rounded shadow-sm">
+                
+                <h6 class="text-primary">
+                    Sending message to: 
+                    {{ entry.coach.name if entry.coach and receiver_id == entry.coach.id else entry.user.name }}
+                </h6>
+
+                {{ render_form(form, action=url_for('message.send_message_page',
+                    event_id=event_id,
+                    message_to=receiver_id)) }}
+
+                <a href="{{ url_for('message.send_message_page', event_id=event_id) }}" 
+                   class="btn btn-sm btn-link text-danger">
+                   Cancel
+                </a>
+            </div>
+        {% endif %}
+
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<div class="alert alert-info text-center">
+    No team members found .
+{%endif%}
+{% endblock %}

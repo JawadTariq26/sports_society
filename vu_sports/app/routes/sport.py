@@ -1,6 +1,6 @@
 from flask import Blueprint, flash, redirect, render_template, request, url_for
 from flask_login import login_required, current_user
-from vu_sports.utils import db
+from vu_sports.utils import admin_required, db
 from vu_sports.app.forms.Sport import CreateSportForm
 from vu_sports.app.repositories.Sport import SportRepository
 
@@ -17,6 +17,7 @@ def list_sports():
 
 @bp.route("/create", methods=["GET", "POST"])
 @login_required
+@admin_required
 def create_sport():
     form = CreateSportForm()
 

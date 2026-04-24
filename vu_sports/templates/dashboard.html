@@ -1,86 +1,246 @@
 {% extends "base.html" %}
 
 {% block content %}
-<br>
 
-{% if current_user.is_authenticated and current_user.role.name == "Admin" %}
+<style>
+    .dashboard-header {
+        background: linear-gradient(135deg, #1e3c72, #2a5298);
+        color: white;
+        padding: 30px;
+        border-radius: 12px;
+        text-align: center;
+        margin-bottom: 30px;
+    }
 
-<div class="container">
-    <h1>Welcome to the VU Sports Society Admin Dashboard</h1>
-    <p>This is your dashboard where you can manage profiles, view and register events.</p>
+    .dashboard-card {
+        border: none;
+        border-radius: 15px;
+        transition: all 0.3s ease;
+        background: #ffffff;
+    }
+
+    .dashboard-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .dashboard-btn {
+        border-radius: 25px;
+        padding: 8px 20px;
+    }
+
+    .icon {
+        font-size: 30px;
+        margin-bottom: 10px;
+        color: #2a5298;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <!-- Header -->
+    <div class="dashboard-header">
+        <h2 class="fw-bold">VU Sports Society</h2>
+        <p class="mb-0">Manage your sports activities efficiently</p>
+    </div>
+
+    {% if current_user.is_authenticated and current_user.role.name == "Admin" %}
+
+    <div class="text-center mb-4">
+        <h4>Welcome Admin 👑</h4>
+        <span class="badge text-bg-primary">ADMIN</span>
+        <div class="row g-3 mt-3 text-center">
+
+    <div class="col-md-3">
+        <div class="py-4 p-3 rounded text-white" style="background:#0d6efd;">
+            <h4 class="mb-0">{{ total_users }}</h4>
+            <small>Total Users</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="py-4 p-3 rounded text-dark" style="background:#ffc107;">
+            <h4 class="mb-0">{{ total_events }}</h4>
+            <small>Total Events</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="py-4 p-3 rounded text-white" style="background:#198754;">
+            <h4 class="mb-0">{{ total_sports }}</h4>
+            <small>Sports</small>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="py-4 p-3 rounded text-white" style="background:#0dcaf0;">
+            <h4 class="mb-0">{{ total_teams }}</h4>
+            <small>Total Teams</small>
+        </div>
+    </div>
+
 </div>
 
-<!-- Create Event  -->
-<div class="container">
-<a href="{{url_for('event.create_event')}}"><button type="button" class="btn btn-info">Create Event</button></a>
+    </div><br>
+    
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">📅</div>
+                <h5>Create Event</h5>
+                <a href="{{url_for('event.create_event')}}" class="btn btn-primary dashboard-btn mt-2">Go</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">📋</div>
+                <h5>All Events</h5>
+                <a href="{{url_for('event.show_all_events')}}" class="btn btn-primary dashboard-btn mt-2">View</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">📨</div>
+                <h5>User Requests</h5>
+                <a href="{{url_for('user_request.all_requests')}}" class="btn btn-primary dashboard-btn mt-2">Check</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">➕</div>
+                <h5>Add Sport</h5>
+                <a href="{{url_for('sport.create_sport')}}" class="btn btn-primary dashboard-btn mt-2">Add</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">👥</div>
+                <h5>Teams</h5>
+                <a href="{{url_for('team.view_all_teams')}}" class="btn btn-primary dashboard-btn mt-2">View</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">✉ ➕ 🔔</div>
+                <h5>Message + Notifications</h5>
+                <a href="{{url_for('notification.notification_message_pg')}}" class="btn btn-primary dashboard-btn mt-2"> Go</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">📩</div>
+                <h5>Receive Messages</h5>
+                <a href="{{url_for('message.receive_message')}}" class="btn btn-primary dashboard-btn mt-2"> View</a>
+            </div>
+        </div>
+
+    </div>
+
+    {% elif current_user.is_authenticated and current_user.role.name == "Coach" %}
+
+    <div class="text-center mb-4">
+        <h4>Welcome {{current_user.name.title()}} 🧑‍🏫</h4>
+        <span class="badge text-bg-primary">Coach</span>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">📨</div>
+                <h5>Participant Requests</h5>
+                <a href="{{url_for('user_request.prt_all_requests')}}" class="btn btn-success dashboard-btn mt-2">View</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">🏆</div>
+                <h5>All Events</h5>
+                <a href="{{url_for('event.show_all_events')}}" class="btn btn-success dashboard-btn mt-2">Explore</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">📌</div>
+                <h5>My Events</h5>
+                <a href="{{url_for('event.my_events')}}" class="btn btn-success dashboard-btn mt-2">Manage</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">✉</div>
+                <h5>Send Message</h5>
+                <a href="{{url_for('message.send_message_coach')}}" class="btn btn-success dashboard-btn mt-2">Go</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">📩</div>
+                <h5>Receive Messages</h5>
+                <a href="{{url_for('message.receive_message')}}" class="btn btn-success dashboard-btn mt-2"> View</a>
+            </div>
+        </div>
+    </div>
+
+    {% elif current_user.is_authenticated and current_user.role.name == "Participant" %}
+
+    <div class="text-center mb-4">
+        <h4>Welcome {{current_user.name.title()}} 🎯</h4>
+        <span class="badge text-bg-primary">Participant</span>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">🔍</div>
+                <h5>View Events</h5>
+                <a href="{{url_for('event.show_all_events')}}" class="btn btn-dark dashboard-btn mt-2">Browse</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">📌</div>
+                <h5>My Registrations</h5>
+                <a href="{{url_for('event.my_events')}}" class="btn btn-dark dashboard-btn mt-2">View</a>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">✉</div>
+                <h5>Send Message</h5>
+                
+                <a href="{{url_for('message.send_message_page')}}" class="btn btn-dark dashboard-btn mt-2">Go</a>
+                
+            </div>
+        </div>        
+
+        <div class="col-md-4">
+            <div class="card dashboard-card shadow text-center p-4">
+                <div class="icon">📩</div>
+                <h5>Receive Messages</h5>
+                <a href="{{url_for('message.receive_message')}}" class="btn btn-dark dashboard-btn mt-2"> View</a>
+            </div>
+        </div>
+
+    </div>
+
+    {% endif %}
+
 </div>
-<br>
-
-<!-- Show all event -->
-<div class="container">
-<a href="{{url_for('event.show_all_events')}}"><button type="button" class="btn btn-info">Show All Events</button></a>
-</div>
-<br>
-
-<!-- Show all sport -->
-<div class="container">
-<a href="{{url_for('user_request.all_requests')}}"><button type="button" class="btn btn-info">Show All Requests</button></a>
-</div>
-<br>
-
-<!-- Create sport -->
-<div class="container">
-    <a href="{{url_for('sport.create_sport')}}"><button type="button" class="btn btn-info">Add Sport</button></a>
-</div>
-<br>
-<!-- View Teams -->
-<div class="container">
-    <a href="{{url_for('team.view_all_teams')}}"><button type="button" class="btn btn-info">View All Teams</button></a>
-</div>
-
-{% elif current_user.is_authenticated and current_user.role.name == "Coach" %}
-<div class="container">
-    <h1>Welcome {{current_user.name.title()}} to the VU Sports Society Coach Dashboard</h1>
-    <p>This is your dashboard where you can view and manage your assigned events.</p>
-    <a href="{{url_for('user_request.prt_all_requests')}}"><button type="button" class="btn btn-info">Show All Requests</button></a>
-</div>
-<br>
-
-<div class="container">
-<a href="{{url_for('event.show_all_events')}}"><button type="button" class="btn btn-info"> View Events</button></a>
-</div>
-<br>
-
-<div class="container">
-<a href="{{url_for('event.my_events')}}"><button type="button" class="btn btn-info"> View Registered Events</button></a>
-</div>
-
-{% elif current_user.is_authenticated and current_user.role.name == "Participant" %}
-<div class="container">
-    <h1>Welcome {{current_user.name.title()}} to the VU Sports Society Participant Dashboard</h1>
-    <p>This is your dashboard where you can view and join sports.</p>
-</div>
-
-
-<div class="container">
-<a href="{{url_for('event.show_all_events')}}"><button type="button" class="btn btn-info"> View Events</button></a>
-</div>
-<br>
-
-
-<div class="container">
-<a href="{{url_for('event.my_events')}}"><button type="button" class="btn btn-info"> View Registered Events</button></a>
-</div>
-
-
-
-{% endif %}
 
 {% endblock %}
-
-
-
-
-
-
-

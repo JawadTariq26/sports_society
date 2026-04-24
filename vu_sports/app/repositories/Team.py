@@ -17,8 +17,9 @@ class TeamRepository:
 
     @staticmethod
     def get_team_by_name(name: str):
-
+        
         return db.session.query(Team).filter_by(name=name).first()
+
 
     @staticmethod
     def create_team(name: str, capacity: int):
@@ -28,11 +29,18 @@ class TeamRepository:
         db.session.commit()
         return new_team
 
+
     @staticmethod
     def get_registered_members(event_id: int):
         event = Event.query.get(event_id)
 
         members = User.query.join(Event_Registration).filter(Event_Registration.event_id == event_id,
-                                                                User.sports.any(id=event.sport_id)).all()
+                                                            User.sports.any(id=event.sport_id)).all()
         return members
     
+    
+    @staticmethod
+    def get_team_members(team_id:int):
+        team = db.session.query(Team).filter(Team.id == team_id).first()
+        
+        return team.users if team else []

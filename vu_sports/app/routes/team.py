@@ -2,8 +2,8 @@ from vu_sports.app.models.Team import Team
 from vu_sports.app.models.Event import Event
 from vu_sports.app.models.User import User
 from vu_sports.app.repositories.Team import TeamRepository
-from flask import Blueprint, flash, redirect, render_template, request, url_for
-from flask_login import login_required
+from flask import Blueprint, flash, redirect, render_template, request, url_for, jsonify
+from flask_login import login_required, current_user
 from vu_sports.utils import db
 from vu_sports.app.forms.Team import CreateTeamForm
 from vu_sports.utils import admin_required, coach_required, coach_or_participant_required, coach_or_admin_required
@@ -36,7 +36,7 @@ def create_team(event_id):
 @login_required
 def view_teams(event_id):
     get_event = Event.query.get(event_id)
-    all_teams = get_event.teams                                                 #type: ignore
+    all_teams = get_event.teams                                                             #type: ignore
     return render_template("teams/view_teams.html", teams= all_teams)
 
 
@@ -54,7 +54,7 @@ def add_participant(team_id,user_id):
         if already_assigned:
             flash("User is already assigned to a team in this event.", category='danger')
             return redirect(url_for('team.registered_members',event_id=event.id))
-        # breakpoint()
+        
     if team and user:
         if len(team.users) < team.capacity:
             team.users.append(user)
@@ -116,3 +116,19 @@ def registered_members(event_id):
 def view_all_teams():
     teams = TeamRepository.get_all_teams()
     return render_template("teams/all_teams.html", teams=teams)
+
+
+# @bp.route('/team_members',methods = ['GET','POST'])
+# def team_member():
+#     sorted_teams = sorted(current_user.teams, key=lambda x: x.id)
+#     all_members = []
+#     seen_user_ids = set() 
+#     print(current_user.id)
+#     for team in sorted_teams:
+#         team_users = TeamRepository.get_team_members(team.id)
+#         for user in team_users:
+#             if user.id not in seen_user_ids:
+#                 all_members.append(user)
+#                 seen_user_ids.add(user.id)
+
+#     return render_template('messages/send_message.html',members=all_members)
