@@ -41,6 +41,6 @@ def create_app() -> Flask:
     app.register_blueprint(notification_bp)
 
     # with app.app_context():
-    #     seed_db()  # Uncomment this line to seed the database with initial data
+    #     seed_db()  # Uncomment this if want to seed the database with initial data
 
     return app

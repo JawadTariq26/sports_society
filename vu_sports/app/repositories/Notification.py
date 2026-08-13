@@ -2,7 +2,6 @@ from vu_sports.utils import db
 from vu_sports.app.models.Notification import Notification
 
 
-
 class NotificationRepository():
 
     @staticmethod
